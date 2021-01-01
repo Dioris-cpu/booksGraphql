@@ -7,6 +7,7 @@ const {
   GraphQLSchema,
   GraphQLID,
   GraphQLInt,
+  GraphQLList,
 } = graphql;
 
 // dummy data
@@ -14,6 +15,12 @@ var books = [
   { name: "Name of the Wind", genre: "Fantasy", id: "1", authorId: "1" },
   { name: "Social", genre: "Psychology", id: "2", authorId: "2" },
   { name: "Iron John", genre: " Social Sciences", id: "3", authorId: "3" },
+  {
+    name: "The Light Around the Body",
+    genre: " Social Sciences",
+    id: "4",
+    authorId: "3",
+  },
 ];
 
 var authors = [
@@ -44,9 +51,9 @@ const AuthorType = new GraphQLObjectType({
     name: { type: GraphQLString },
     age: { type: GraphQLInt },
     book: {
-      type: BookType,
+      type: new GraphQLList(BookType),
       resolve(parent, args) {
-        return _.find(books, { id: parent.bookId });
+        return _.filter(books, { authorId: parent.id });
       },
     },
   }),
@@ -70,10 +77,18 @@ const RootQuery = new GraphQLObjectType({
       type: AuthorType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        // code to get data from db / other source
-
         return _.find(authors, { id: args.id });
       },
+    },
+    books: {
+      type: new GraphQLList(BookType),
+      description: "List of all books",
+      resolve: (parent, args) => books,
+    },
+    authors: {
+      type: new GraphQLList(AuthorType),
+      description: "List of all authors",
+      resolve: (parent, args) => authors,
     },
   },
 });

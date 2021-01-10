@@ -2,9 +2,14 @@ const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
 const schema = require("./schema/schema");
 const mongoose = require("mongoose");
+const cors = require('cors');
 const app = express();
 
 // connect to mongodb database
+
+// allow cross-origin request
+
+app.use(cors())
 
 // Connect to the MongoDB cluster
 mongoose.connect(
@@ -23,4 +28,4 @@ app.use(
   })
 );
 
-app.listen(3000, () => console.log("server is running on port 3000"));
+app.listen(5000, () => console.log("server is running on port 5000"));

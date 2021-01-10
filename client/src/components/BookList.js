@@ -1,7 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
 import { useQuery, gql } from "@apollo/client";
-import { graphql } from "graphql";
-import { render } from "react-dom";
 
 const getBooksQuery = gql`
   {
@@ -17,11 +15,12 @@ function BookList() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
+
   
-      return data.id.map(({ books, id }) => (
-        <div key={books}>
+      return data.books.map(({ name, id }) => (
+        <div key={name}>
           <p>
-            {books}: {id}
+            {name}: {id}
           </p>
         </div>
       ));
